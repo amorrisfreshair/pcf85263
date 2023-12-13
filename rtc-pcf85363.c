@@ -374,6 +374,7 @@ static int pcf85363_probe(struct i2c_client *client,
 
 static const struct of_device_id dev_ids[] = {
 	{ .compatible = "nxp,pcf85363" },
+	{ .compatible = "nxp,pcf85263" },
 	{}
 };
 MODULE_DEVICE_TABLE(of, dev_ids);
