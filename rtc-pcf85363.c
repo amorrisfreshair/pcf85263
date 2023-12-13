@@ -326,14 +326,6 @@ static int pcf85363_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
 	struct pcf85363 *pcf85363;
-	struct nvmem_config nvmem_cfg = {
-		.name = "pcf85363-",
-		.word_size = 1,
-		.stride = 1,
-		.size = NVRAM_SIZE,
-		.reg_read = pcf85363_nvram_read,
-		.reg_write = pcf85363_nvram_write,
-	};
 	int ret;
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
@@ -374,9 +366,6 @@ static int pcf85363_probe(struct i2c_client *client,
 	}
 
 	ret = rtc_register_device(pcf85363->rtc);
-
-	nvmem_cfg.priv = pcf85363;
-	rtc_nvmem_register(pcf85363->rtc, &nvmem_cfg);
 
 	return ret;
 }
