@@ -345,7 +345,11 @@ static int pcf85363_probe(struct i2c_client *client,
 	pcf85363->dev = &client->dev;
 	i2c_set_clientdata(client, pcf85363);
 
-	pcf85363->rtc = devm_rtc_allocate_device(pcf85363->dev);
+	pcf85363->rtc = devm_rtc_device_register(pcf85363->dev,
+			pcf85363_driver.driver.name,
+			&rtc_ops,
+			THIS_MODULE);
+
 	if (IS_ERR(pcf85363->rtc))
 		return PTR_ERR(pcf85363->rtc);
 
@@ -365,9 +369,7 @@ static int pcf85363_probe(struct i2c_client *client,
 			pcf85363->rtc->ops = &rtc_ops_alarm;
 	}
 
-	ret = rtc_register_device(pcf85363->rtc);
-
-	return ret;
+	return 0;
 }
 
 static const struct of_device_id dev_ids[] = {
