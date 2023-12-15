@@ -187,11 +187,6 @@ static const struct rtc_class_ops rtc_ops = {
 	.set_time	= pcf85363_rtc_set_time,
 };
 
-static const struct rtc_class_ops rtc_ops_alarm = {
-	.read_time	= pcf85363_rtc_read_time,
-	.set_time	= pcf85363_rtc_set_time,
-};
-
 static const struct regmap_config regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
