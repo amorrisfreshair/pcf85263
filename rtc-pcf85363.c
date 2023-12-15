@@ -349,20 +349,19 @@ static int pcf85363_probe(struct i2c_client *client,
 	return PTR_ERR_OR_ZERO(pcf85363->rtc);
 }
 
-static const struct of_device_id dev_ids[] = {
-	{ .compatible = "nxp,pcf85363" },
-	{ .compatible = "nxp,pcf85263" },
-	{}
+static const struct i2c_device_id dev_ids[] = {
+	{ "pcf85363", 0 },
+	{ }
 };
 
-MODULE_DEVICE_TABLE(of, dev_ids);
+MODULE_DEVICE_TABLE(i2c, dev_ids);
 
 static struct i2c_driver pcf85363_driver = {
 	.driver	= {
 		.name	= "pcf85363",
-		.of_match_table = of_match_ptr(dev_ids),
 	},
-	.probe	= pcf85363_probe,
+	.probe		= pcf85363_probe,
+	.id_table 	= dev_ids,
 };
 
 module_i2c_driver(pcf85363_driver);
