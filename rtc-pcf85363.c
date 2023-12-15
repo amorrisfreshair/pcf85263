@@ -349,8 +349,6 @@ static int pcf85363_probe(struct i2c_client *client,
 	if (IS_ERR(pcf85363->rtc))
 		return PTR_ERR(pcf85363->rtc);
 
-	pcf85363->rtc->ops = &rtc_ops;
-
 	return 0;
 }
 
