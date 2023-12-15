@@ -324,6 +324,12 @@ static int pcf85363_nvram_write(void *priv, unsigned int offset, void *val,
 				 val, bytes);
 }
 
+static const struct regmap_config regmap_config = {
+	.reg_bits = 8,
+	.val_bits = 8,
+	.max_register = 0x2f,
+};
+
 static int pcf85363_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
@@ -338,6 +344,14 @@ static int pcf85363_probe(struct i2c_client *client,
 				GFP_KERNEL);
 	if (!pcf85363)
 		return -ENOMEM;
+
+	printk(KERN_INFO ">>>>>>>>>> Initialising regmap.\n");
+	pcf85363->regmap = devm_regmap_init_i2c(client, &regmap_config);
+	if (IS_ERR(pcf85363->regmap)) {
+		printk(KERN_INFO ">>>>>>>>>> Failed to init regmap.\n");
+		dev_err(&client->dev, "regmap allocation failed\n");
+		return PTR_ERR(pcf85363->regmap);
+	}
 
 	i2c_set_clientdata(client, pcf85363);
 
