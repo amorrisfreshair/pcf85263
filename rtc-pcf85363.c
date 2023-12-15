@@ -346,10 +346,7 @@ static int pcf85363_probe(struct i2c_client *client,
 			&rtc_ops,
 			THIS_MODULE);
 
-	if (IS_ERR(pcf85363->rtc))
-		return PTR_ERR(pcf85363->rtc);
-
-	return 0;
+	return PTR_ERR_OR_ZERO(pcf85363->rtc);
 }
 
 static const struct of_device_id dev_ids[] = {
