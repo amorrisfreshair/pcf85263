@@ -325,12 +325,6 @@ static int pcf85363_nvram_write(void *priv, unsigned int offset, void *val,
 				 val, bytes);
 }
 
-static const struct regmap_config regmap_config = {
-	.reg_bits = 8,
-	.val_bits = 8,
-	.max_register = 0x7f,
-};
-
 static int pcf85363_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
@@ -346,12 +340,6 @@ static int pcf85363_probe(struct i2c_client *client,
 	if (!pcf85363)
 		return -ENOMEM;
 
-	pcf85363->regmap = devm_regmap_init_i2c(client, &regmap_config);
-	if (IS_ERR(pcf85363->regmap)) {
-		dev_err(&client->dev, "regmap allocation failed\n");
-		return PTR_ERR(pcf85363->regmap);
-	}
-
 	pcf85363->dev = &client->dev;
 	i2c_set_clientdata(client, pcf85363);
 
@@ -364,20 +352,6 @@ static int pcf85363_probe(struct i2c_client *client,
 		return PTR_ERR(pcf85363->rtc);
 
 	pcf85363->rtc->ops = &rtc_ops;
-
-	if (client->irq > 0) {
-		regmap_write(pcf85363->regmap, CTRL_FLAGS, 0);
-		regmap_update_bits(pcf85363->regmap, CTRL_PIN_IO,
-				   PIN_IO_INTA_OUT, PIN_IO_INTAPM);
-		ret = devm_request_threaded_irq(pcf85363->dev, client->irq,
-						NULL, pcf85363_rtc_handle_irq,
-						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-						"pcf85363", client);
-		if (ret)
-			dev_warn(&client->dev, "unable to request IRQ, alarms disabled\n");
-		else
-			pcf85363->rtc->ops = &rtc_ops_alarm;
-	}
 
 	return 0;
 }
