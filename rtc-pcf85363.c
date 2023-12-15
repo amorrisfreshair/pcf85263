@@ -304,26 +304,6 @@ static const struct rtc_class_ops rtc_ops_alarm = {
 	.alarm_irq_enable = pcf85363_rtc_alarm_irq_enable,
 };
 
-static int pcf85363_nvram_read(void *priv, unsigned int offset, void *val,
-			       size_t bytes)
-{
-	printk(KERN_INFO "nvram read pcf85363 function has been called.\n");
-	struct pcf85363 *pcf85363 = priv;
-
-	return regmap_bulk_read(pcf85363->regmap, CTRL_RAM + offset,
-				val, bytes);
-}
-
-static int pcf85363_nvram_write(void *priv, unsigned int offset, void *val,
-				size_t bytes)
-{
-	printk(KERN_INFO "nvram write pcf85363 function has been called.\n");
-	struct pcf85363 *pcf85363 = priv;
-
-	return regmap_bulk_write(pcf85363->regmap, CTRL_RAM + offset,
-				 val, bytes);
-}
-
 static const struct regmap_config regmap_config = {
 	.reg_bits = 8,
 	.val_bits = 8,
