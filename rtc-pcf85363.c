@@ -122,6 +122,7 @@ struct pcf85363 {
 
 static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char buf[DT_YEARS + 1];
 	int ret, len = sizeof(buf);
@@ -151,6 +152,7 @@ static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 
 static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char tmp[11];
 	unsigned char *buf = &tmp[2];
@@ -183,6 +185,7 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
 
 static int pcf85363_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char buf[DT_MONTH_ALM1 - DT_SECOND_ALM1 + 1];
 	unsigned int val;
@@ -211,6 +214,7 @@ static int pcf85363_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 static int _pcf85363_rtc_alarm_irq_enable(struct pcf85363 *pcf85363, unsigned
 					  int enabled)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	unsigned int alarm_flags = ALRM_SEC_A1E | ALRM_MIN_A1E | ALRM_HR_A1E |
 				   ALRM_DAY_A1E | ALRM_MON_A1E;
 	int ret;
@@ -233,6 +237,7 @@ static int _pcf85363_rtc_alarm_irq_enable(struct pcf85363 *pcf85363, unsigned
 static int pcf85363_rtc_alarm_irq_enable(struct device *dev,
 					 unsigned int enabled)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 
 	return _pcf85363_rtc_alarm_irq_enable(pcf85363, enabled);
@@ -240,6 +245,7 @@ static int pcf85363_rtc_alarm_irq_enable(struct device *dev,
 
 static int pcf85363_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char buf[DT_MONTH_ALM1 - DT_SECOND_ALM1 + 1];
 	int ret;
@@ -268,6 +274,7 @@ static int pcf85363_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 
 static irqreturn_t pcf85363_rtc_handle_irq(int irq, void *dev_id)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = i2c_get_clientdata(dev_id);
 	unsigned int flags;
 	int err;
@@ -301,6 +308,7 @@ static const struct rtc_class_ops rtc_ops_alarm = {
 static int pcf85363_nvram_read(void *priv, unsigned int offset, void *val,
 			       size_t bytes)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = priv;
 
 	return regmap_bulk_read(pcf85363->regmap, CTRL_RAM + offset,
@@ -310,6 +318,7 @@ static int pcf85363_nvram_read(void *priv, unsigned int offset, void *val,
 static int pcf85363_nvram_write(void *priv, unsigned int offset, void *val,
 				size_t bytes)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = priv;
 
 	return regmap_bulk_write(pcf85363->regmap, CTRL_RAM + offset,
@@ -325,6 +334,7 @@ static const struct regmap_config regmap_config = {
 static int pcf85363_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
+	printk(KERN_INFO "Some pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363;
 	int ret;
 
@@ -377,6 +387,7 @@ static const struct of_device_id dev_ids[] = {
 	{ .compatible = "nxp,pcf85263" },
 	{}
 };
+
 MODULE_DEVICE_TABLE(of, dev_ids);
 
 static struct i2c_driver pcf85363_driver = {
