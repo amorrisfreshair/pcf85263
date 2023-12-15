@@ -115,7 +115,6 @@
 static struct i2c_driver pcf85363_driver;
 
 struct pcf85363 {
-	struct device		*dev;
 	struct rtc_device	*rtc;
 	struct regmap		*regmap;
 };
@@ -340,10 +339,9 @@ static int pcf85363_probe(struct i2c_client *client,
 	if (!pcf85363)
 		return -ENOMEM;
 
-	pcf85363->dev = &client->dev;
 	i2c_set_clientdata(client, pcf85363);
 
-	pcf85363->rtc = devm_rtc_device_register(pcf85363->dev,
+	pcf85363->rtc = devm_rtc_device_register(&client->dev,
 			pcf85363_driver.driver.name,
 			&rtc_ops,
 			THIS_MODULE);
