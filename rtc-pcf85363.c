@@ -121,7 +121,6 @@ struct pcf85363 {
 
 static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 {
-	printk(KERN_INFO "read time  pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char buf[DT_YEARS + 1];
 	int ret, len = sizeof(buf);
@@ -151,7 +150,6 @@ static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 
 static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
 {
-	printk(KERN_INFO "set time pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
 	unsigned char tmp[11];
 	unsigned char *buf = &tmp[2];
@@ -196,7 +194,6 @@ static const struct regmap_config regmap_config = {
 static int pcf85363_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
-	printk(KERN_INFO "Probe from pcf85363 function has been called.\n");
 	struct pcf85363 *pcf85363;
 	int ret;
 
@@ -208,10 +205,8 @@ static int pcf85363_probe(struct i2c_client *client,
 	if (!pcf85363)
 		return -ENOMEM;
 
-	printk(KERN_INFO ">>>>>>>>>> Initialising regmap.\n");
 	pcf85363->regmap = devm_regmap_init_i2c(client, &regmap_config);
 	if (IS_ERR(pcf85363->regmap)) {
-		printk(KERN_INFO ">>>>>>>>>> Failed to init regmap.\n");
 		dev_err(&client->dev, "regmap allocation failed\n");
 		return PTR_ERR(pcf85363->regmap);
 	}
