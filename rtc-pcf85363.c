@@ -1,15 +1,13 @@
 /*
- * drivers/rtc/rtc-pcf85363.c
- *
- * Driver for NXP PCF85363 real-time clock.
- *
- * Copyright (C) 2017 Eric Nelson
+ * Driver for NXP PCF85263 real-time clock.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  *
- * Based loosely on rtc-8583 by Russell King, Wolfram Sang and Juergen Beisert
+ * Based on the rtc-pcf85363 rtc driver by Eric Nelson.
+ * Back-ported/written for kernel version 4.9.78-ti-r94 on 2023-12-18
+ * Not tested on PCF85363.
  */
 #include <linux/module.h>
 #include <linux/i2c.h>
@@ -238,6 +236,6 @@ static struct i2c_driver pcf85363_driver = {
 
 module_i2c_driver(pcf85363_driver);
 
-MODULE_AUTHOR("Eric Nelson");
-MODULE_DESCRIPTION("pcf85363 I2C RTC driver");
+MODULE_AUTHOR("Alan Morris");
+MODULE_DESCRIPTION("pcf85263 I2C RTC driver");
 MODULE_LICENSE("GPL");
