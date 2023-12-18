@@ -108,23 +108,23 @@
 
 #define RESET_CPR	0xa4
 
-#define NVRAM_SIZE	0x40
+#define NVRAM_SIZE	0x01
 
-static struct i2c_driver pcf85363_driver;
+static struct i2c_driver pcf85263_driver;
 
-struct pcf85363 {
+struct pcf85263 {
 	struct rtc_device	*rtc;
 	struct regmap		*regmap;
 };
 
-static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
+static int pcf85263_rtc_read_time(struct device *dev, struct rtc_time *tm)
 {
-	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
+	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
 	unsigned char buf[DT_YEARS + 1];
 	int ret, len = sizeof(buf);
 
 	/* read the RTC date and time registers all at once */
-	ret = regmap_bulk_read(pcf85363->regmap, DT_100THS, buf, len);
+	ret = regmap_bulk_read(pcf85263->regmap, DT_100THS, buf, len);
 	if (ret) {
 		dev_err(dev, "%s: error %d\n", __func__, ret);
 		return ret;
@@ -146,9 +146,9 @@ static int pcf85363_rtc_read_time(struct device *dev, struct rtc_time *tm)
 	return 0;
 }
 
-static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
+static int pcf85263_rtc_set_time(struct device *dev, struct rtc_time *tm)
 {
-	struct pcf85363 *pcf85363 = dev_get_drvdata(dev);
+	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
 	unsigned char tmp[11];
 	unsigned char *buf = &tmp[2];
 	int ret;
@@ -165,22 +165,22 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
 	buf[DT_MONTHS] = bin2bcd(tm->tm_mon + 1);
 	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
 
-	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
+	ret = regmap_bulk_write(pcf85263->regmap, CTRL_STOP_EN,
 				tmp, 2);
 	if (ret)
 		return ret;
 
-	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
+	ret = regmap_bulk_write(pcf85263->regmap, DT_100THS,
 				buf, sizeof(tmp) - 2);
 	if (ret)
 		return ret;
 
-	return regmap_write(pcf85363->regmap, CTRL_STOP_EN, 0);
+	return regmap_write(pcf85263->regmap, CTRL_STOP_EN, 0);
 }
 
 static const struct rtc_class_ops rtc_ops = {
-	.read_time	= pcf85363_rtc_read_time,
-	.set_time	= pcf85363_rtc_set_time,
+	.read_time	= pcf85263_rtc_read_time,
+	.set_time	= pcf85263_rtc_set_time,
 };
 
 static const struct regmap_config regmap_config = {
@@ -189,52 +189,52 @@ static const struct regmap_config regmap_config = {
 	.max_register = 0x2f,
 };
 
-static int pcf85363_probe(struct i2c_client *client,
+static int pcf85263_probe(struct i2c_client *client,
 			  const struct i2c_device_id *id)
 {
-	struct pcf85363 *pcf85363;
+	struct pcf85263 *pcf85263;
 	int ret;
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 		return -ENODEV;
 
-	pcf85363 = devm_kzalloc(&client->dev, sizeof(struct pcf85363),
+	pcf85263 = devm_kzalloc(&client->dev, sizeof(struct pcf85263),
 				GFP_KERNEL);
-	if (!pcf85363)
+	if (!pcf85263)
 		return -ENOMEM;
 
-	pcf85363->regmap = devm_regmap_init_i2c(client, &regmap_config);
-	if (IS_ERR(pcf85363->regmap)) {
+	pcf85263->regmap = devm_regmap_init_i2c(client, &regmap_config);
+	if (IS_ERR(pcf85263->regmap)) {
 		dev_err(&client->dev, "regmap allocation failed\n");
-		return PTR_ERR(pcf85363->regmap);
+		return PTR_ERR(pcf85263->regmap);
 	}
 
-	i2c_set_clientdata(client, pcf85363);
+	i2c_set_clientdata(client, pcf85263);
 
-	pcf85363->rtc = devm_rtc_device_register(&client->dev,
-			pcf85363_driver.driver.name,
+	pcf85263->rtc = devm_rtc_device_register(&client->dev,
+			pcf85263_driver.driver.name,
 			&rtc_ops,
 			THIS_MODULE);
 
-	return PTR_ERR_OR_ZERO(pcf85363->rtc);
+	return PTR_ERR_OR_ZERO(pcf85263->rtc);
 }
 
 static const struct i2c_device_id dev_ids[] = {
-	{ "pcf85363", 0 },
+	{ "pcf85263", 0 },
 	{ }
 };
 
 MODULE_DEVICE_TABLE(i2c, dev_ids);
 
-static struct i2c_driver pcf85363_driver = {
+static struct i2c_driver pcf85263_driver = {
 	.driver	= {
-		.name	= "pcf85363",
+		.name	= "pcf85263",
 	},
-	.probe		= pcf85363_probe,
+	.probe		= pcf85263_probe,
 	.id_table 	= dev_ids,
 };
 
-module_i2c_driver(pcf85363_driver);
+module_i2c_driver(pcf85263_driver);
 
 MODULE_AUTHOR("Alan Morris");
 MODULE_DESCRIPTION("pcf85263 I2C RTC driver");

@@ -6,7 +6,8 @@
 # if KERNELRELEASE is defined, we've been invoked from the
 # kernel build system and can use its variables.
 ifneq (${KERNELRELEASE},)
-	obj-m := rtc-pcf85363.o
+	obj-m := rtc-pcf85263.o
+	#obj-m := w8583.o
 
 # Otherwise we were called directly from the command line.
 # Invoke the kernel build system.
