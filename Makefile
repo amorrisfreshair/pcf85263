@@ -7,17 +7,16 @@
 # kernel build system and can use its variables.
 ifneq (${KERNELRELEASE},)
 	obj-m := rtc-pcf85263.o
-	#obj-m := w8583.o
 
 # Otherwise we were called directly from the command line.
 # Invoke the kernel build system.
 else
-	KERNEL_SOURCE := /home/alan/freshair/debian_backport/beaglebonekernel/linux
+	KERNEL_SOURCE := ../linux
 	PWD := $(shell pwd)
 	CC=arm-linux-gnueabihf-
 
 	CORES=4
-	PUBLIC_DRIVER_PWD=/home/alan/freshair/debian_backport/beaglebonekernel/public
+	PUBLIC_DRIVER_PWD=../public
 
 default:
 # Trigger kernel build for this module
